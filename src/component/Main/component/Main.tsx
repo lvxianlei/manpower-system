@@ -35,9 +35,9 @@ export default (props: any) => {
                     </Menu>
                 </Sider>
                 <Layout style={{ padding: '0 24px 24px' }}>
-                    <Breadcrumb style={{ margin: '16px 0' }}>
+                    {/* <Breadcrumb style={{ margin: '16px 0' }}>
                         <Breadcrumb.Item>Home</Breadcrumb.Item>
-                    </Breadcrumb>
+                    </Breadcrumb> */}
                     <Content
                         className="site-layout-background"
                         style={{
@@ -47,9 +47,10 @@ export default (props: any) => {
                         }}
                     >
                         <Switch>
-                            <Route exact path='/home/userInfo' component={List} />
+                            <Route exact path='/home/:type' component={List} />
+                            {/* <Route exact path='/home/userInfo' component={List} />
                             <Route exact path='/home/attendance' component={List} />
-                            <Route exact path='/home/achievements' component={List} />
+                            <Route exact path='/home/achievements' component={List} /> */}
                         </Switch>
                     </Content>
                 </Layout>
