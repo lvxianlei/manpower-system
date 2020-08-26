@@ -1,32 +1,42 @@
-import React from 'react'
-import { Form, Input, Button } from 'antd'
+import React, { useState } from 'react'
+import { Form, Input, Button, Alert } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import axios from 'axios'
-import { setItem } from '../../../Util'
+import { setItem, ErrorInfo } from '../../../Util'
 import '../index.scss'
 const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
-};
+}
 const tailLayout = {
     wrapperCol: { offset: 8, span: 16 },
-};
+}
+
+interface SubmitValue {
+    username: string,
+    password: string
+}
 
 export default (props: any) => {
-    const onFinish = async (values: any) => {
+    const [error, setError] = useState(false)
+    const [errorInfo, setErrorInfo] = useState('')
+    const onFinish = async (values: SubmitValue) => {
         const postData = new URLSearchParams()
         postData.append('username', values.username)
         postData.append('password', values.password)
-        const data = await axios.request({
-            url: 'http://192.168.1.125:8000/login',
-            method: 'post',
-            headers: { 'content-type': 'application/x-www-form-urlencoded;charset=utf8' },
-            data: postData
-        })
-
-        console.log(data.data, '--------------');
-        // setItem(values)
-        // props.history.push('/home')
+        try {
+            const data = await axios.request({
+                url: 'http://localhost:8000/login',
+                method: 'post',
+                headers: { 'content-type': 'application/x-www-form-urlencoded;charset=utf8' },
+                data: postData
+            })
+            setItem(data.data.data)
+            props.history.push('/user_info')
+        } catch (error) {
+            setError(true)
+            setErrorInfo(ErrorInfo[error.response.status])
+        }
     }
 
     const onFinishFailed = (errorInfo: any) => {
@@ -35,8 +45,8 @@ export default (props: any) => {
     }
 
     return (
-        <section className="main">
-            <div className="center">
+        <section className="login">
+            <div className="text-center">
                 <Form
                     name="normal_login"
                     className="login-form"
@@ -44,6 +54,9 @@ export default (props: any) => {
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
                 >
+                    <Form.Item>
+                        {error ? <Alert message={errorInfo} type="error" showIcon /> : ''}
+                    </Form.Item>
                     <Form.Item
                         name="username"
                         rules={[{ required: true, message: 'Please input your Username!' }]}

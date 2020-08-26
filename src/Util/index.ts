@@ -11,3 +11,5 @@ export const getItem = (key: string, format?: Function) => {
 }
 
 export const removeItem = (key: string) => localStorage.removeItem(key);
+
+export { default as ErrorInfo } from './ErrorInfo'

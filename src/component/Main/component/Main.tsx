@@ -1,12 +1,9 @@
 import React, { useState } from 'react'
-import { Layout, Menu, Breadcrumb } from 'antd';
+import { Layout, Menu } from 'antd'
 import { Switch, Route } from 'react-router-dom'
+import { UserAddOutlined, BarChartOutlined, DesktopOutlined, SettingOutlined } from '@ant-design/icons'
 import List from '../../List'
-import {
-    UserAddOutlined,
-    BarChartOutlined,
-    DesktopOutlined
-} from '@ant-design/icons';
+import Edit from '../../Edit'
 import '../index.scss'
 const { Header, Content, Sider } = Layout;
 export default (props: any) => {
@@ -29,15 +26,13 @@ export default (props: any) => {
                         style={{ height: '100%', borderRight: 0 }}
                         onClick={(event: any) => menuItemClick(event)}
                     >
-                        <Menu.Item key="/home/userInfo" icon={<UserAddOutlined />}>人员信息</Menu.Item>
-                        <Menu.Item key="/home/attendance" icon={<DesktopOutlined />}>考勤信息</Menu.Item>
-                        <Menu.Item key="/home/achievements" icon={<BarChartOutlined />}>绩效统计</Menu.Item>
+                        <Menu.Item key="/user_info" icon={<UserAddOutlined />}>人员信息</Menu.Item>
+                        <Menu.Item key="/attendance" icon={<DesktopOutlined />}>考勤信息</Menu.Item>
+                        <Menu.Item key="/achievements" icon={<BarChartOutlined />}>绩效统计</Menu.Item>
+                        <Menu.Item key="/system_setting" icon={<SettingOutlined />}>系统设置</Menu.Item>
                     </Menu>
                 </Sider>
                 <Layout style={{ padding: '0 24px 24px' }}>
-                    {/* <Breadcrumb style={{ margin: '16px 0' }}>
-                        <Breadcrumb.Item>Home</Breadcrumb.Item>
-                    </Breadcrumb> */}
                     <Content
                         className="site-layout-background"
                         style={{
@@ -47,10 +42,8 @@ export default (props: any) => {
                         }}
                     >
                         <Switch>
-                            <Route exact path='/home/:type' component={List} />
-                            {/* <Route exact path='/home/userInfo' component={List} />
-                            <Route exact path='/home/attendance' component={List} />
-                            <Route exact path='/home/achievements' component={List} /> */}
+                            <Route exact path='/:type' component={List} />
+                            <Route exact path='/:type/edit' component={Edit} />
                         </Switch>
                     </Content>
                 </Layout>
