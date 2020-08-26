@@ -13,3 +13,6 @@ export const getItem = (key: string, format?: Function) => {
 export const removeItem = (key: string) => localStorage.removeItem(key);
 
 export { default as ErrorInfo } from './ErrorInfo'
+export { default as CodeInfo } from './CodeInfo'
+
+export { default as request } from './request'

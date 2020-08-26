@@ -4,7 +4,7 @@ import { ConfigProvider } from 'antd'
 import zhCN from 'antd/es/locale/zh_CN';
 import ReactDOM from 'react-dom'
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
-import { getItem } from './Util'
+import { getItem, request } from './Util'
 import Login from './component/Login'
 import Main from './component/Main'
 
@@ -12,9 +12,14 @@ import Main from './component/Main'
 const PrivateRoute = ({ component: Component }: any) => {
   return (
     <Route
-      render={props =>
-        getItem('access_token') ? <Component {...props} /> : <Redirect to={{ pathname: "/login" }}
-        />
+      render={props => {
+        if (getItem('access_token')) {
+          // request.defaults.headers.common['Authorization'] = getItem('access_token')
+          return <Component {...props} />
+        } else {
+          return <Redirect to={{ pathname: "/login" }} />
+        }
+      }
       }
     />
   )

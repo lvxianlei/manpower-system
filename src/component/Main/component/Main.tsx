@@ -12,12 +12,12 @@ export default (props: any) => {
         props.history.push(event.key)
     }
     return (
-        <Layout>
+        <Layout className="main-container">
             <Header className="header">
                 <div className="logo" />
                 <h1 className="title">Manpower System</h1>
             </Header>
-            <Layout>
+            <Layout className="main-content">
                 <Sider width={200} className="site-layout-background">
                     <Menu
                         mode="inline"

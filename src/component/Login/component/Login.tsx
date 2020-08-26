@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Form, Input, Button, Alert } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import axios from 'axios'
+import { request } from '../../../Util'
 import { setItem, ErrorInfo } from '../../../Util'
 import '../index.scss'
 const layout = {
@@ -19,29 +20,32 @@ interface SubmitValue {
 
 export default (props: any) => {
     const [error, setError] = useState(false)
+    const [loaded, setLoaded] = useState(false)
     const [errorInfo, setErrorInfo] = useState('')
     const onFinish = async (values: SubmitValue) => {
         const postData = new URLSearchParams()
         postData.append('username', values.username)
         postData.append('password', values.password)
         try {
+            setLoaded(true)
             const data = await axios.request({
                 url: 'http://localhost:8000/login',
                 method: 'post',
                 headers: { 'content-type': 'application/x-www-form-urlencoded;charset=utf8' },
                 data: postData
             })
-            setItem(data.data.data)
-            props.history.push('/user_info')
+            setLoaded(false)
+            setItem(data.data)
+            props.history.push('/')
         } catch (error) {
             setError(true)
-            setErrorInfo(ErrorInfo[error.response.status])
+            setLoaded(false)
+            setErrorInfo(ErrorInfo[error.response ? error.response.status : 999])
         }
     }
 
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
-
     }
 
     return (
@@ -51,7 +55,7 @@ export default (props: any) => {
                     name="normal_login"
                     className="login-form"
                     initialValues={{ remember: true }}
-                    onFinish={onFinish}
+                    onFinish={(event: any) => onFinish(event)}
                     onFinishFailed={onFinishFailed}
                 >
                     <Form.Item>
@@ -74,7 +78,7 @@ export default (props: any) => {
                         />
                     </Form.Item>
                     <Form.Item>
-                        <Button type="primary" htmlType="submit" className="login-form-button">登录</Button>
+                        <Button type="primary" loading={loaded} htmlType="submit" className="login-form-button">登录</Button>
                     </Form.Item>
                 </Form>
             </div>

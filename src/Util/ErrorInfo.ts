@@ -10,6 +10,7 @@ const ErrorInfo: any = {
     502: '服务器错误,请稍后再重新登陆',
     503: '服务器错误,请稍后再重新登陆',
     504: '网关超时。',
+    999: '服务已停止维护'
 }
 
 export default ErrorInfo
