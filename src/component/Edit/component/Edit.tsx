@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Button, Space, Upload } from 'antd'
 import { createFromIconfontCN } from '@ant-design/icons';
 import Query from '../../common/Query'
@@ -10,14 +9,11 @@ const IconFont: any = createFromIconfontCN({
 })
 
 export default (props: any) => {
-    console.log(props)
     return (
         <section>
             <Space>
-                <Button type="primary"><Link to={`/${props.match.params.type}/edit`}>新增</Link></Button>
-                <Upload
-                    accept=".xls,.xlsx"
-                >
+                <Button type="primary">新增</Button>
+                <Upload>
                     <Button><IconFont type="icon-Exceldaoru" />Excel 导入</Button>
                 </Upload>
             </Space>

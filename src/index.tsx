@@ -1,4 +1,4 @@
-import React, { ReactType } from 'react';
+import React from 'react';
 import 'antd/dist/antd.css';
 import { ConfigProvider } from 'antd'
 import zhCN from 'antd/es/locale/zh_CN';
@@ -8,25 +8,12 @@ import { getItem } from './Util'
 import Login from './component/Login'
 import Main from './component/Main'
 
-interface PrivateProps {
-  componet: ReactType;
-  path: string;
-}
-
-const requireCredentials = (props: any) => {
-  const token = getItem('username')
-  if (token) {
-    return true
-  } else {
-    return false
-  }
-}
 
 const PrivateRoute = ({ component: Component }: any) => {
   return (
     <Route
       render={props =>
-        requireCredentials(props) ? <Component {...props} /> : <Redirect to={{ pathname: "/" }}
+        getItem('access_token') ? <Component {...props} /> : <Redirect to={{ pathname: "/login" }}
         />
       }
     />
@@ -37,8 +24,8 @@ ReactDOM.render(
   <ConfigProvider locale={zhCN}>
     <BrowserRouter >
       <Switch>
-        <Route exact path="/" component={Login} />
-        <PrivateRoute path="/home" component={Main} />
+        <Route exact path="/login" component={Login} />
+        <PrivateRoute path="/" component={Main} />
       </Switch>
     </BrowserRouter>
   </ConfigProvider>,
