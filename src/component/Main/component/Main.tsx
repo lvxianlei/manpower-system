@@ -27,14 +27,14 @@ export default (props: any) => {
                         style={{ height: '100%', borderRight: 0 }}
                         onClick={(event: any) => menuItemClick(event)}
                     >
-                        <Menu.Item key="/user_info" icon={<UserAddOutlined />}>1</Menu.Item>
+                        {/* <Menu.Item key="/user_info" icon={<UserAddOutlined />}>1</Menu.Item>
                         <Menu.Item key="/attendance" icon={<DesktopOutlined />}>2</Menu.Item>
                         <Menu.Item key="/achievements" icon={<BarChartOutlined />}>3</Menu.Item>
-                        <Menu.Item key="/system_setting" icon={<SettingOutlined />}>4</Menu.Item>
-                        {/* <Menu.Item key="/user_info" icon={<UserAddOutlined />}>人员信息</Menu.Item>
+                        <Menu.Item key="/system_setting" icon={<SettingOutlined />}>4</Menu.Item> */}
+                        <Menu.Item key="/user_info" icon={<UserAddOutlined />}>人员信息</Menu.Item>
                         <Menu.Item key="/attendance" icon={<DesktopOutlined />}>考勤信息</Menu.Item>
                         <Menu.Item key="/achievements" icon={<BarChartOutlined />}>绩效统计</Menu.Item>
-                        <Menu.Item key="/system_setting" icon={<SettingOutlined />}>系统设置</Menu.Item> */}
+                        <Menu.Item key="/system_setting" icon={<SettingOutlined />}>系统设置</Menu.Item>
                     </Menu>
                 </Sider>
                 <Layout style={{ padding: '0 24px 24px' }}>

@@ -2,5 +2,5 @@ export const BASE_URL: string = process.env.NODE_ENV === 'development' ? "http:/
 
 export const LOGIN_URL: string = BASE_URL + '/login'
 
-export const USER_URL: string = BASE_URL + '/user'
+export const LIST_URL: string = BASE_URL + '/list'
 
