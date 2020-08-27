@@ -3,16 +3,17 @@ import { BASE_URL } from '../Config/API'
 const reqest = axios.create({
     baseURL: BASE_URL,
     timeout: 1000,
-    headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
-    transformRequest: [(data: any) => {
-        return data;
-    }]
+    headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" }
 })
 
-axios.interceptors.response.use(function (response) {
-    return response.data;
+reqest.interceptors.response.use(function (response) {
+    const { data } = response
+    if (data.code > -1) {
+        return response.data;
+    } else {
+        return Promise.reject(data)
+    }
 }, function (error) {
-    // 对响应错误做点什么
     return Promise.reject(error);
 });
 

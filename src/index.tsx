@@ -14,7 +14,7 @@ const PrivateRoute = ({ component: Component }: any) => {
     <Route
       render={props => {
         if (getItem('access_token')) {
-          // request.defaults.headers.common['Authorization'] = getItem('access_token')
+          request.defaults.headers.common['Authorization'] = "Bearer " + getItem('access_token')
           return <Component {...props} />
         } else {
           return <Redirect to={{ pathname: "/login" }} />

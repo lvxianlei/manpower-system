@@ -35,7 +35,7 @@ export default (props: any) => {
                 data: postData
             })
             setLoaded(false)
-            setItem(data.data)
+            setItem(data.data.data)
             props.history.push('/')
         } catch (error) {
             setError(true)
