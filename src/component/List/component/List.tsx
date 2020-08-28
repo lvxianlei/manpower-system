@@ -2,8 +2,8 @@ import React, { useEffect, useReducer } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Space, Upload, Spin } from 'antd'
 import { createFromIconfontCN } from '@ant-design/icons'
-import { request } from '../../../Util'
-import { LIST_URL } from '../../../Config/API'
+import { request, getItem } from '../../../Util'
+import { LIST_URL, UPLOAD_URL } from '../../../Config/API'
 import Query from '../../common/Query'
 import Table from '../../common/Table'
 import '../index.scss'
@@ -49,6 +49,9 @@ export default (props: any) => {
                 <Button type="primary"><Link to={`/${props.match.params.type}/edit`}>新增</Link></Button>
                 {type !== 'system_setting' && <Upload
                     accept=".xls,.xlsx"
+                    action={UPLOAD_URL}
+                    method="POST"
+                    headers={{ 'Authorization': "Bearer " + getItem('access_token') }}
                 >
                     <Button><IconFont type="icon-Exceldaoru" />Excel 导入</Button>
                 </Upload>}
