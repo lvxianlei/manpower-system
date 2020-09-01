@@ -20,6 +20,6 @@ export default (props: Table_prop) => {
         title: item.label,
         dataIndex: item.name
     }))
-    const data = props.dataSource.map((item: any) => ({ ...item, key: item.idNumber }))
+    const data = props.dataSource.map((item: any) => ({ ...item, key: item.idNumber + item.username }))
     return <Table columns={columns} dataSource={data} />
 }

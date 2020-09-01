@@ -50,8 +50,10 @@ export default (props: any) => {
         })()
     }, [dispatch, type])
 
-    const onFinish: Function = (value: any) => {
+    const onFinish: Function = async (value: any) => {
         console.log(value, '------submit------')
+        const saveData = await request.put(EDIT_URL, { type, ...value })
+        props.history.go(-1)
     }
 
     return (
@@ -59,7 +61,7 @@ export default (props: any) => {
             <Form name="nest-messages" {...layout} labelAlign="right" onFinish={event => onFinish(event)}>
                 <Row>
                     {editData.data.map((item: any) =>
-                        <Col span={9} offset={2}>
+                        <Col span={9} offset={2} key={item.name}>
                             <Form.Item name={item.name} label={item.label} rules={[{ required: true }]}>
                                 <Input />
                             </Form.Item>
