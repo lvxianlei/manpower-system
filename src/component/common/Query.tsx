@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Form, Row, Col, Input, Button } from 'antd';
 export default () => {
-    const [expand, setExpand] = useState(false)
+    // const [expand, setExpand] = useState(false)
     const [form] = Form.useForm()
     const onFinish = (values: any) => {
         console.log('Received values of form: ', values);

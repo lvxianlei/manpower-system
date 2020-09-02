@@ -1,25 +1,42 @@
-#components-layout-demo-top-side-2 .logo {
-  width: 120px;
-  height: 31px;
+.trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+.logo {
+  height: 32px;
   background: rgba(255, 255, 255, 0.2);
-  margin: 16px 28px 16px 0;
-  float: left;
+  margin: 16px;
 }
 
 .site-layout-background {
-  background: #fff;
+  background-color: #fff;
 }
 
-.title{
-  width:100%;
-  text-align:center;
-  color:#fff;
+.left-sider {
+  background-color: #fff;
+  .logo {
+    height: 64px;
+    margin: 0;
+    text-align: center;
+    line-height: 64px;
+    color: #fff;
+    background-color: #000;
+  }
 }
 
-.main-container{
+.main-container {
   height: 100%;
 }
 
-.main-content{
-  padding: 24px
+.site-content {
+  padding: 24px;
+  margin: 0;
 }

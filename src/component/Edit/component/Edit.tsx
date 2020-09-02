@@ -1,12 +1,8 @@
 import React, { useEffect, useReducer } from 'react'
-import { Form, Input, InputNumber, Button, Spin, Row, Col } from 'antd'
-import { createFromIconfontCN } from '@ant-design/icons'
+import { Form, Input, Button, Spin, Row, Col } from 'antd'
 import { EDIT_URL } from '../../../Config/API'
 import { request } from '../../../Util'
 import '../index.scss'
-const IconFont: any = createFromIconfontCN({
-    scriptUrl: '//at.alicdn.com/t/font_2014371_vucntjl36is.js'
-})
 
 const initState = {
     data: [],
@@ -52,8 +48,10 @@ export default (props: any) => {
 
     const onFinish: Function = async (value: any) => {
         console.log(value, '------submit------')
-        const saveData = await request.put(EDIT_URL, { type, ...value })
-        props.history.go(-1)
+        const saveData: any = await request.put(EDIT_URL, { type, ...value })
+        if (saveData.code === 1) {
+            props.history.go(-1)
+        }
     }
 
     return (

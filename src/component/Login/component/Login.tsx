@@ -2,16 +2,8 @@ import React, { useState } from 'react'
 import { Form, Input, Button, Alert } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import axios from 'axios'
-import { request } from '../../../Util'
 import { setItem, ErrorInfo } from '../../../Util'
 import '../index.scss'
-const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
-}
-const tailLayout = {
-    wrapperCol: { offset: 8, span: 16 },
-}
 
 interface SubmitValue {
     username: string,
