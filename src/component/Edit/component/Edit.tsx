@@ -1,9 +1,10 @@
-import React, { useEffect, useReducer } from 'react'
-import { Form, Input, Button, Spin, Row, Col } from 'antd'
+import React, { useEffect, useReducer, useState } from 'react'
+import { Prompt } from 'react-router-dom'
+import { Form, Input, Button, Spin, Row, Col, Modal } from 'antd'
 import { EDIT_URL } from '../../../Config/API'
 import { request } from '../../../Util'
 import '../index.scss'
-
+const { confirm } = Modal
 const initState = {
     data: [],
     loading: true
@@ -34,6 +35,8 @@ const layout = {
 export default (props: any) => {
     const { type } = props.match.params
     const [editData, dispatch] = useReducer(reducer, initState)
+    const [isLeave, setIsLeave] = useState(true)
+
     useEffect(() => {
         (async () => {
             dispatch({ type: 'FETCH_EDIT_START' })
@@ -47,15 +50,27 @@ export default (props: any) => {
     }, [dispatch, type])
 
     const onFinish: Function = async (value: any) => {
-        console.log(value, '------submit------')
         const saveData: any = await request.put(EDIT_URL, { type, ...value })
         if (saveData.code === 1) {
+            setIsLeave(false)
             props.history.go(-1)
         }
     }
 
     return (
         <Spin spinning={editData.loading}>
+            <Prompt when={isLeave} message={location => {
+                confirm({
+                    title: '数据未保存，您确定仍要要离开吗？',
+                    okText: '确认',
+                    cancelText: '取消',
+                    onOk() {
+                        setIsLeave(false)
+                        props.history.go(-1)
+                    }
+                })
+                return false;
+            }} />
             <Form name="nest-messages" {...layout} labelAlign="right" onFinish={event => onFinish(event)}>
                 <Row>
                     {editData.data.map((item: any) =>

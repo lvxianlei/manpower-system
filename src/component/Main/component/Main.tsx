@@ -1,12 +1,29 @@
 import React, { useState } from 'react'
 import { Layout, Menu, } from 'antd'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
 import { UserAddOutlined, BarChartOutlined, DesktopOutlined, SettingOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons'
 import List from '../../List'
 import Edit from '../../Edit'
 import '../index.scss'
 const { Header, Content, Sider } = Layout;
+
+const PrivateRoute = ({ component: Component, path }: any) => {
+    return (
+        <Route
+            render={props => {
+                if (path === '/') {
+                    return <Redirect to={{ pathname: "/user_info" }} />
+                } else {
+                    return <Component {...props} />
+                }
+            }
+            }
+        />
+    )
+}
+
 export default (props: any) => {
+    const type = props.location.pathname
     const [collapsed, setCollapsed] = useState(false)
 
     const menuItemClick = (event: any) => {
@@ -18,8 +35,8 @@ export default (props: any) => {
             <Sider className="left-sider" trigger={null} collapsible collapsed={collapsed}>
                 <h1 className="logo" style={{ height: '64px', boxSizing: 'border-box' }}>AA-BB</h1>
                 <Menu mode="inline"
-                    defaultSelectedKeys={['1']}
-                    defaultOpenKeys={['sub1']}
+                    defaultSelectedKeys={[type]}
+                    defaultOpenKeys={[type]}
                     style={{ height: '100%', borderRight: 0 }}
                     onClick={(event: any) => menuItemClick(event)}>
                     <Menu.Item key="/user_info" icon={<UserAddOutlined />}>1</Menu.Item>
@@ -37,6 +54,7 @@ export default (props: any) => {
                 </Header>
                 <Content className="site-content">
                     <Switch>
+                        <PrivateRoute exact path='/' component={List} />
                         <Route exact path='/:type' component={List} />
                         <Route exact path='/:type/edit' component={Edit} />
                     </Switch>

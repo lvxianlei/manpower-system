@@ -32,7 +32,7 @@ export default () => {
                     </Form.Item>
                 </Col>
                 <Col span={8} >
-                    <Form.Item name='' label='职位状态' rules={[{
+                    <Form.Item name='' label='状态' rules={[{
                         required: true,
                         message: 'Input something!',
                     }]}>

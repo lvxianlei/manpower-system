@@ -1,8 +1,8 @@
-import React from 'react'
 import axios from 'axios'
-import { notification, Button } from 'antd'
+import { Modal } from 'antd'
 import { BASE_URL } from '../Config/API'
 import { removeItem } from '../Util'
+const { error } = Modal
 const reqest = axios.create({
     baseURL: BASE_URL,
     timeout: 3000,
@@ -24,12 +24,19 @@ const refrenceLogin = () => {
 reqest.interceptors.response.use((response) => {
     const { data } = response
     if (data.code === -1) {
-        notification.warning({
-            message: '当前会话超时，请重新登陆',
-            description: '打开网站时间过长，或长时间未操作',
-            btn: (<Button type="primary" onClick={refrenceLogin}>登陆</Button>),
-            duration: 0
+        error({
+            title: '当前会话超时，请重新登陆',
+            content: '打开网站时间过长，或长时间未操作',
+            okText: '登录',
+            onOk: refrenceLogin
         })
+    } else if (data.code === 3) {
+        error({
+            title: '请求错误',
+            content: JSON.stringify(data.msg),
+            okText: '确定'
+        })
+        return response.data;
     } else {
         return response.data;
     }
