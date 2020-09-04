@@ -25,7 +25,6 @@ const PrivateRoute = ({ component: Component, path }: any) => {
 export default (props: any) => {
     const type = props.location.pathname
     const [collapsed, setCollapsed] = useState(false)
-
     const menuItemClick = (event: any) => {
         props.history.push(event.key)
     }
@@ -53,11 +52,13 @@ export default (props: any) => {
                     })}
                 </Header>
                 <Content className="site-content">
-                    <Switch>
-                        <PrivateRoute exact path='/' component={List} />
-                        <Route exact path='/:type' component={List} />
-                        <Route exact path='/:type/edit' component={Edit} />
-                    </Switch>
+                    <section className="list-main">
+                        <Switch>
+                            <PrivateRoute exact path='/' component={List} />
+                            <Route exact path='/:type' component={List} />
+                            <Route exact path='/:type/edit' component={Edit} />
+                        </Switch>
+                    </section>
                 </Content>
             </Layout>
         </Layout>
