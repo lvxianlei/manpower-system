@@ -8,7 +8,7 @@ const confirm = Modal.confirm;
 const buttonType: any = {
     edit: {
         render(props: any) {
-            return <Button type="link" onClick={() => history.push('/edit')}>{props.name}</Button>
+            // return <Button type="link" onClick={() => history.push('/edit')}>{props.name}</Button>
         }
     },
     delete: {
@@ -35,7 +35,5 @@ const buttonType: any = {
 }
 
 export default (props:any) => {
-    const history = useHistory()
-
-    return 
+    // const history = useHistory()
 }

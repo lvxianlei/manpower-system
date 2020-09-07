@@ -2,7 +2,7 @@ import React, { useEffect, useReducer } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Space, Upload, Spin } from 'antd'
 import { createFromIconfontCN } from '@ant-design/icons'
-import { request, getItem } from '../../../Util'
+import { request, getSessionItem } from '../../../Util'
 import { LIST_URL, UPLOAD_URL } from '../../../Config/API'
 import Query from '../../common/Query'
 import Table from '../../common/Table'
@@ -51,7 +51,7 @@ export default (props: any) => {
                     accept=".xls,.xlsx"
                     action={UPLOAD_URL}
                     method="POST"
-                    headers={{ 'Authorization': "Bearer " + getItem('access_token') }}
+                    headers={{ 'Authorization': "Bearer " + getSessionItem('access_token') }}
                 >
                     <Button><IconFont type="icon-Exceldaoru" />Excel 导入</Button>
                 </Upload>}
