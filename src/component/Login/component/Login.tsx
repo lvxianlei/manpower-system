@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Form, Input, Button, Alert } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import axios from 'axios'
-import { setItem, ErrorInfo } from '../../../Util'
+import { setSessionItem, ErrorInfo } from '../../../Util'
 import '../index.scss'
 
 interface SubmitValue {
@@ -27,7 +27,7 @@ export default (props: any) => {
                 data: postData
             })
             setLoaded(false)
-            setItem(data.data.data)
+            setSessionItem(data.data.data)
             props.history.push('/')
         } catch (error) {
             setError(true)
