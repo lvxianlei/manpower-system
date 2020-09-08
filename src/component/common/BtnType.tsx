@@ -1,39 +1,66 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Button, Modal } from 'antd';
 import { useHistory } from 'react-router-dom';
-const confirm = Modal.confirm;
-/**
- * buttonType保存了所有要返回的button类型type属性和所要进行的操作
- */
+import { EDIT_URL } from '../../Config/API'
+import { request } from '../../Util';
+const { confirm, success } = Modal;
+
+interface Button_selef {
+    name: string;
+    type: string;
+    option: string;
+    id: string
+}
+
+interface BtnType {
+    data: Button_selef,
+    type: string
+}
+
 const buttonType: any = {
     edit: {
-        render(props: any) {
-            // return <Button type="link" onClick={() => history.push('/edit')}>{props.name}</Button>
+        render(props: Button_selef, history: any) {
+            return <Button type="link" onClick={() => history.push(history.location.pathname + '/edit/' + props.id)}>{props.name}</Button>
+        }
+    },
+    auth: {
+        render(props: any, history: any) {
+            return <Button type="link" onClick={() => history.push(history.location.pathname + '/auth')}>{props.name}</Button>
         }
     },
     delete: {
-        handleClick(event: any) {
-            const { that } = event;
-            const { name } = that.props;
+        handleClick(data: Button_selef, history: any) {
+            const type = history.location.pathname.split('/')[1]
             confirm({
-                title: name,
-                content: `确定要${name}？`,
+                title: data.name,
+                content: `确定要${data.name}？`,
                 okText: '确认',
                 cancelText: '取消',
-                onOk() {
-                    const { data, linkUrl } = that.props;
-                    that.props.dispatch(that.props.deleteWay({ path: linkUrl, deleteId: { name: data.get('name'), linkUrl } }));
+                onOk: async () => {
+                    try {
+                        const deleteInfo: any = await request.delete(EDIT_URL, { data: { id: data.id, type } })
+                        if (deleteInfo.code === 1) {
+                            success({
+                                title: '删除',
+                                content: '数据成功删除...',
+                                okText: '确认'
+                            })
+                        }
+                    } catch (error) {
+
+                    }
                 }
             })
         },
-        render(props: any) {
-            const { that } = props;
-            const { disabled } = that.props;
-            return <Button type="link" className={disabled ? "disabled" : ''} disabled={disabled ? true : false} onClick={() => this.handleClick(props)}>{props.children}</Button>
+        render(props: Button_selef, history: any) {
+            return <Button type="link" onClick={() => this.handleClick(props, history)}>{props.name}</Button>
         }
     }
 }
 
-export default (props:any) => {
-    // const history = useHistory()
+export default (props: BtnType) => {
+    const history = useHistory()
+    return <>
+        {buttonType[props.type].render(props.data, history)}
+    </>
 }

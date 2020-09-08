@@ -34,9 +34,9 @@ reqest.interceptors.response.use((response) => {
         error({
             title: '请求错误',
             content: JSON.stringify(data.msg),
-            okText: '确定'
+            okText: '确定',
+            onOk: refrenceLogin
         })
-        return response.data;
     } else {
         return response.data;
     }

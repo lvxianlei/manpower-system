@@ -4,9 +4,10 @@ import { Form, Input, Button, Spin, Row, Col, Modal } from 'antd'
 import { EDIT_URL } from '../../../Config/API'
 import { request } from '../../../Util'
 import '../index.scss'
-const { confirm } = Modal
+const { confirm, success } = Modal
 const initState = {
-    data: [],
+    data: {},
+    head: [],
     loading: true
 }
 
@@ -15,7 +16,7 @@ const reducer = (state: any, action: any) => {
         case "FETCH_EDIT_START":
             return { ...state, loading: false }
         case "FETCH_EDIT_SUCCESS":
-            return { ...state, data: action.paload }
+            return { ...state, ...action.paload }
         case "FETCH_EDIT_ERROR":
             return { ...state, error: action.paload }
     }
@@ -33,27 +34,37 @@ const layout = {
 }
 
 export default (props: any) => {
-    const { type } = props.match.params
+    const { type, id } = props.match.params
     const [editData, dispatch] = useReducer(reducer, initState)
     const [isLeave, setIsLeave] = useState(true)
-
+    const [form] = Form.useForm()
     useEffect(() => {
         (async () => {
             dispatch({ type: 'FETCH_EDIT_START' })
             try {
-                const editData: any = await request.post(EDIT_URL, { type })
+                const editData: any = await request.post(EDIT_URL, { type, id })
                 dispatch({ type: 'FETCH_EDIT_SUCCESS', paload: editData.data })
+                form.setFieldsValue(editData.data.data)
             } catch (error) {
                 dispatch({ type: 'FETCH_EDIT_ERROR', paload: error })
             }
         })()
-    }, [dispatch, type])
+    }, [dispatch, type, id, form])
 
     const onFinish: Function = async (value: any) => {
-        const saveData: any = await request.put(EDIT_URL, { type, ...value })
-        if (saveData.code === 1) {
-            setIsLeave(false)
-            props.history.go(-1)
+        try {
+            const saveData: any = await request.put(EDIT_URL, { type, id, ...value })
+            if (saveData.code === 1) {
+                success({
+                    title: '保存',
+                    content: '数据成功保存...',
+                    okText: '确认',
+                })
+                setIsLeave(false)
+                props.history.go(-1)
+            }
+        } catch (error) {
+            setIsLeave(true)
         }
     }
 
@@ -71,9 +82,9 @@ export default (props: any) => {
                 })
                 return false;
             }} />
-            <Form name="nest-messages" {...layout} labelAlign="right" onFinish={event => onFinish(event)}>
+            <Form name="nest-messages" {...layout} form={form} labelAlign="right" onFinish={event => onFinish(event)}>
                 <Row>
-                    {editData.data.map((item: any) =>
+                    {editData.head.map((item: any) =>
                         <Col span={9} offset={2} key={item.name}>
                             <Form.Item name={item.name} label={item.label} rules={[{ required: true }]}>
                                 <Input />

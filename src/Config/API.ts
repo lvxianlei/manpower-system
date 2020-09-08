@@ -2,6 +2,8 @@ export const BASE_URL: string = process.env.NODE_ENV === 'development' ? "http:/
 
 export const LOGIN_URL: string = BASE_URL + '/login'
 
+export const MENU_URL: string = BASE_URL + '/menu'
+
 export const LIST_URL: string = '/list'
 
 export const EDIT_URL: string = '/edit'

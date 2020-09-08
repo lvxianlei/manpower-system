@@ -1,11 +1,30 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useReducer } from 'react'
 import { Layout, Menu, } from 'antd'
 import { Switch, Route, Redirect } from 'react-router-dom'
-import { UserAddOutlined, BarChartOutlined, DesktopOutlined, SettingOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons'
+import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons'
 import List from '../../List'
 import Edit from '../../Edit'
 import '../index.scss'
+import { request } from '../../../Util'
+import { MENU_URL } from '../../../Config/API'
+import IconType from '../../common/IconType'
 const { Header, Content, Sider } = Layout;
+
+const initState = {
+    data: [],
+    loading: true
+}
+
+const reducer = (state: any, action: any) => {
+    switch (action.type) {
+        case "FETCH_Main_START":
+            return { ...state, loading: false }
+        case "FETCH_Main_SUCCESS":
+            return { data: action.paload, loading: true }
+        case "FETCH_Main_ERROR":
+            return { data: [], error: action.paload }
+    }
+}
 
 const PrivateRoute = ({ component: Component, path }: any) => {
     return (
@@ -25,9 +44,22 @@ const PrivateRoute = ({ component: Component, path }: any) => {
 export default (props: any) => {
     const type = props.location.pathname
     const [collapsed, setCollapsed] = useState(false)
+    const [mainData, dispatch] = useReducer(reducer, initState)
     const menuItemClick = (event: any) => {
         props.history.push(event.key)
     }
+
+    useEffect(() => {
+        (async () => {
+            dispatch({ type: 'FETCH_Main_START' })
+            try {
+                const fetchMainData: any = await request.post(MENU_URL, {})
+                dispatch({ type: 'FETCH_Main_SUCCESS', paload: fetchMainData.data })
+            } catch (error) {
+                dispatch({ type: 'FETCH_Main_ERROR', paload: error })
+            }
+        })()
+    }, [])
 
     return (
         <Layout className="main-container">
@@ -38,10 +70,10 @@ export default (props: any) => {
                     defaultOpenKeys={[type]}
                     style={{ height: '100%', borderRight: 0 }}
                     onClick={(event: any) => menuItemClick(event)}>
-                    <Menu.Item key="/user_info" icon={<UserAddOutlined />}>人员信息</Menu.Item>
-                    <Menu.Item key="/attendance" icon={<DesktopOutlined />}>考勤信息</Menu.Item>
-                    <Menu.Item key="/achievements" icon={<BarChartOutlined />}>绩效统计</Menu.Item>
-                    <Menu.Item key="/system_setting" icon={<SettingOutlined />}>系统设置</Menu.Item>
+                    {
+                        mainData.data.map((menu: any, index: number) =>
+                            <Menu.Item key={`/${menu.name}`} icon={IconType[menu.name]}>{menu.label}</Menu.Item>)
+                    }
                 </Menu>
             </Sider>
             <Layout className="site-layout">
@@ -53,11 +85,12 @@ export default (props: any) => {
                 </Header>
                 <Content className="site-content">
                     <section className="list-main">
-                        <Switch>
+                        {mainData.loading && <Switch>
                             <PrivateRoute exact path='/' component={List} />
                             <Route exact path='/:type' component={List} />
                             <Route exact path='/:type/edit' component={Edit} />
-                        </Switch>
+                            <Route exact path='/:type/edit/:id' component={Edit} />
+                        </Switch>}
                     </section>
                 </Content>
             </Layout>

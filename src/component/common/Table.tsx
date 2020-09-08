@@ -1,6 +1,6 @@
 import React from 'react'
-import { Table, Space, Button } from 'antd'
-// import BtnType from './BtnType'
+import { Table, Space } from 'antd'
+import BtnType from './BtnType'
 interface Table_prop {
     columns: Array<any>
     dataSource: Array<any>
@@ -14,8 +14,7 @@ export default (props: Table_prop) => {
                 {
                     text.pageButton
                     &&
-                    text.pageButton.map((button: any, index: number) => (<Button type="link">{button.name}</Button>)
-                        // BtnType[button.type].render({ ...button, ...props })
+                    text.pageButton.map((button: any, index: number) => (<BtnType key={button.name} data={{ ...button, id: text.id }} type={button.type} />)
                     )}
             </Space>
         )
