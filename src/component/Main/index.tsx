@@ -60,7 +60,7 @@ export default (props: any) => {
                 dispatch({ type: 'FETCH_Main_ERROR', paload: error })
             }
         })()
-    }, [])
+    }, [dispatch])
 
     return (
         <Layout className="main-container">
