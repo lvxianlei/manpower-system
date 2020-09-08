@@ -2,11 +2,11 @@ import React, { useEffect, useReducer } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Space, Upload, Spin } from 'antd'
 import { createFromIconfontCN } from '@ant-design/icons'
-import { request, getSessionItem } from '../../../Util'
-import { LIST_URL, UPLOAD_URL } from '../../../Config/API'
-import Query from '../../common/Query'
-import Table from '../../common/Table'
-import '../index.scss'
+import { request, getSessionItem } from '../../Util'
+import { LIST_URL, UPLOAD_URL } from '../../Config/API'
+import Query from '../common/Query'
+import Table from '../common/Table'
+import './index.scss'
 const IconFont: any = createFromIconfontCN({
     scriptUrl: '//at.alicdn.com/t/font_2014371_vucntjl36is.js'
 })

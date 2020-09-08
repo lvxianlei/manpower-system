@@ -8,6 +8,8 @@ export const LIST_URL: string = '/list'
 
 export const EDIT_URL: string = '/edit'
 
+export const AUTH_URL: string = '/auth'
+
 export const UPLOAD_URL: string = BASE_URL + '/list/upload'
 
 

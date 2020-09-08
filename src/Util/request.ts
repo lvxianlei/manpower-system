@@ -23,22 +23,32 @@ const refrenceLogin = () => {
 
 reqest.interceptors.response.use((response) => {
     const { data } = response
-    if (data.code === -1) {
-        error({
-            title: '当前会话超时，请重新登陆',
-            content: '打开网站时间过长，或长时间未操作',
-            okText: '登录',
-            onOk: refrenceLogin
-        })
-    } else if (data.code === 3) {
-        error({
-            title: '请求错误',
-            content: JSON.stringify(data.msg),
-            okText: '确定',
-            onOk: refrenceLogin
-        })
-    } else {
-        return response.data;
+    switch (data.code) {
+        case -1:
+            error({
+                title: '当前会话超时，请重新登陆',
+                content: '打开网站时间过长，或长时间未操作',
+                okText: '登录',
+                onOk: refrenceLogin
+            })
+            break;
+        case 0:
+            error({
+                title: '权限',
+                content: JSON.stringify(data.msg),
+                okText: '登录',
+                onOk: refrenceLogin
+            })
+            break;
+        case 3:
+            error({
+                title: '请求错误',
+                content: JSON.stringify(data.msg),
+                okText: '确定'
+            })
+            break;
+        default:
+            return response.data;
     }
 }, (error) => {
     return Promise.reject(error)

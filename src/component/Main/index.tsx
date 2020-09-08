@@ -2,12 +2,13 @@ import React, { useState, useEffect, useReducer } from 'react'
 import { Layout, Menu, } from 'antd'
 import { Switch, Route, Redirect } from 'react-router-dom'
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons'
-import List from '../../List'
-import Edit from '../../Edit'
-import '../index.scss'
-import { request } from '../../../Util'
-import { MENU_URL } from '../../../Config/API'
-import IconType from '../../common/IconType'
+import List from '../List'
+import Edit from '../Edit'
+import Auth from '../Auth'
+import './index.scss'
+import { request } from '../../Util'
+import { MENU_URL } from '../../Config/API'
+import IconType from '../common/IconType'
 const { Header, Content, Sider } = Layout;
 
 const initState = {
@@ -89,6 +90,7 @@ export default (props: any) => {
                             <PrivateRoute exact path='/' component={List} />
                             <Route exact path='/:type' component={List} />
                             <Route exact path='/:type/edit' component={Edit} />
+                            <Route exact path='/:type/auth' component={Auth} />
                             <Route exact path='/:type/edit/:id' component={Edit} />
                         </Switch>}
                     </section>
