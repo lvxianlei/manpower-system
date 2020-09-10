@@ -4,7 +4,7 @@ import { Form, Input, Button, Spin, Row, Col, Modal } from 'antd'
 import { EDIT_URL } from '../../Config/API'
 import { request } from '../../Util'
 import './index.scss'
-const { confirm, success } = Modal
+const { success } = Modal
 const initState = {
     data: {},
     head: [],
@@ -70,18 +70,7 @@ export default (props: any) => {
 
     return (
         <Spin spinning={editData.loading}>
-            <Prompt when={isLeave} message={location => {
-                confirm({
-                    title: '数据未保存，您确定仍要要离开吗？',
-                    okText: '确认',
-                    cancelText: '取消',
-                    onOk() {
-                        setIsLeave(false)
-                        props.history.go(-1)
-                    }
-                })
-                return false;
-            }} />
+            <Prompt when={isLeave} message={() => 'edit'} />
             <Form name="manpower-edit" {...layout} form={form} labelAlign="right" onFinish={event => onFinish(event)}>
                 <Row>
                     {editData.head.map((item: any) =>

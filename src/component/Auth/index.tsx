@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useReducer, useEffect } from 'react'
 import { Prompt } from 'react-router-dom'
 import { Form, Switch, Modal, Row, Col, Button } from 'antd'
 import { AUTH_URL } from '../../Config/API'
 import { request } from '../../Util'
 import './index.scss'
-const { confirm } = Modal
+const { confirm, success } = Modal
 
 const layout = {
     labelCol: {
@@ -17,81 +17,77 @@ const layout = {
     },
 }
 
+const initState = {
+    auth_menu: [],
+    auth_btn: [],
+    data: {
+        auth_btn: [],
+        auth_menu: [],
+    },
+    loading: true
+}
+
+const reducer = (state: any, action: any) => {
+    switch (action.type) {
+        case "FETCH_AUTH_START":
+            return { ...state, loading: false }
+        case "FETCH_AUTH_SUCCESS":
+            return { ...state, ...action.paload }
+        case "FETCH_AUTH_ERROR":
+            return { ...state, error: action.paload }
+    }
+}
+
 export default (props: any) => {
+    const { type, id } = props.match.params
+    const [authData, dispatch] = useReducer(reducer, initState)
     const [isLeave, setIsLeave] = useState(true)
     const [form] = Form.useForm()
+    useEffect(() => {
+        (async () => {
+            dispatch({ type: 'FETCH_AUTH_START' })
+            try {
+                const authData: any = await request.post(AUTH_URL, { type, id })
+                dispatch({ type: 'FETCH_AUTH_SUCCESS', paload: authData.data })
+                form.setFieldsValue(authData.data.data)
+            } catch (error) {
+                dispatch({ type: 'FETCH_AUTH_ERROR', paload: error })
+            }
+        })()
+    }, [dispatch, type, id, form])
 
     const onFinish: Function = async (value: any) => {
+        const postAuthMenu = authData.auth_menu.filter((menu: any) => value[menu.name]).map((menu: any) => menu.name).join(',')
+        const postAuthBtn = authData.auth_btn.filter((btn: any) => value[btn.name]).map((btn: any) => btn.name).join(',')
         try {
-            const saveData: any = await request.post(AUTH_URL, {})
-            // if (saveData.code === 1) {
-            //     success({
-            //         title: '保存',
-            //         content: '数据成功保存...',
-            //         okText: '确认',
-            //     })
-            //     setIsLeave(false)
-            //     props.history.go(-1)
-            // }
+            const saveData: any = await request.put(AUTH_URL, { auth_menu: postAuthMenu, auth_btn: postAuthBtn, id })
+            if (saveData.code === 1) {
+                success({
+                    title: '保存',
+                    content: '数据成功保存...',
+                    okText: '确认',
+                })
+                setIsLeave(false)
+                props.history.go(-1)
+            }
         } catch (error) {
             setIsLeave(true)
         }
     }
     return (
         <>
-            <Prompt when={isLeave} message={location => {
-                confirm({
-                    title: '数据未保存，您确定仍要要离开吗？',
-                    okText: '确认',
-                    cancelText: '取消',
-                    onOk() {
-                        setIsLeave(false)
-                        props.history.go(-1)
-                    }
-                })
-                return false;
-            }} />
+            <Prompt when={isLeave} message={() => 'edit'} />
             <Form name="manpower-auth" {...layout} form={form} labelAlign="right" onFinish={event => onFinish(event)}>
                 <Row>
-                    <Col span={9} offset={2} >
-                        <Form.Item name="{item.name}1" label="人员信息" valuePropName="checked" >
+                    <Col span={9} offset={2}>
+                        {authData.auth_menu.map((menu: any) => <Form.Item valuePropName="checked" key={menu.name} name={menu.name} label={menu.label}>
                             <Switch />
-                        </Form.Item>
+                        </Form.Item>)}
                     </Col>
-                    <Col span={9} offset={2} >
-                        <Form.Item name="{item.name}2" label="人员信息" valuePropName="checked" >
+                    <Col span={9} offset={2}>
+                        {authData.auth_btn.map((menu: any) => <Form.Item valuePropName="checked" key={menu.name} name={menu.name} label={menu.label}>
                             <Switch />
-                        </Form.Item>
-                    </Col>
-                    <Col span={9} offset={2} >
-                        <Form.Item name="{item.name}3" label="人员信息" valuePropName="checked">
-                            <Switch />
-                        </Form.Item>
-                    </Col>
-                    <Col span={9} offset={2} >
-                        <Form.Item name="{item.name}4" label="人员信息" valuePropName="checked">
-                            <Switch />
-                        </Form.Item>
-                    </Col>
-                    <Col span={9} offset={2} >
-                        <Form.Item name="{item.name}5" label="人员信息" valuePropName="checked">
-                            <Switch />
-                        </Form.Item>
-                    </Col>
-                    <Col span={9} offset={2} >
-                        <Form.Item name="{item.name}6" label="人员信息" valuePropName="checked">
-                            <Switch />
-                        </Form.Item>
-                    </Col>
-                    <Col span={9} offset={2} >
-                        <Form.Item name="{item.name}7" label="人员信息" valuePropName="checked">
-                            <Switch />
-                        </Form.Item>
-                    </Col>
-                    <Col span={9} offset={2} >
-                        <Form.Item name="{item.name}8" label="人员信息" valuePropName="checked">
-                            <Switch />
-                        </Form.Item>
+                        </Form.Item>)}
                     </Col>
                 </Row>
                 <Row>

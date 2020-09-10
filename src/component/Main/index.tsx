@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer } from 'react'
-import { Layout, Menu, } from 'antd'
+import { Layout, Menu, Spin, } from 'antd'
 import { Switch, Route, Redirect } from 'react-router-dom'
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons'
 import List from '../List'
@@ -13,17 +13,17 @@ const { Header, Content, Sider } = Layout;
 
 const initState = {
     data: [],
-    loading: true
+    loading: false
 }
 
 const reducer = (state: any, action: any) => {
     switch (action.type) {
         case "FETCH_Main_START":
-            return { ...state, loading: false }
+            return { ...state, loading: true }
         case "FETCH_Main_SUCCESS":
-            return { data: action.paload, loading: true }
+            return { data: action.paload, loading: false }
         case "FETCH_Main_ERROR":
-            return { data: [], error: action.paload }
+            return { data: [], error: action.paload, loading: false }
     }
 }
 
@@ -63,39 +63,41 @@ export default (props: any) => {
     }, [dispatch])
 
     return (
-        <Layout className="main-container">
-            <Sider className="left-sider" trigger={null} collapsible collapsed={collapsed}>
-                <h1 className="logo" style={{ height: '64px', boxSizing: 'border-box' }}>AA-BB</h1>
-                <Menu mode="inline"
-                    defaultSelectedKeys={[type]}
-                    defaultOpenKeys={[type]}
-                    style={{ height: '100%', borderRight: 0 }}
-                    onClick={(event: any) => menuItemClick(event)}>
-                    {
-                        mainData.data.map((menu: any, index: number) =>
-                            <Menu.Item key={`/${menu.name}`} icon={IconType[menu.name]}>{menu.label}</Menu.Item>)
-                    }
-                </Menu>
-            </Sider>
-            <Layout className="site-layout">
-                <Header className="site-layout-background" style={{ padding: 0 }}>
-                    {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-                        className: 'trigger',
-                        onClick: () => setCollapsed(!collapsed),
-                    })}
-                </Header>
-                <Content className="site-content">
-                    <section className="list-main">
-                        {mainData.loading && <Switch>
-                            <PrivateRoute exact path='/' component={List} />
-                            <Route exact path='/:type' component={List} />
-                            <Route exact path='/:type/edit' component={Edit} />
-                            <Route exact path='/:type/auth' component={Auth} />
-                            <Route exact path='/:type/edit/:id' component={Edit} />
-                        </Switch>}
-                    </section>
-                </Content>
+        <Spin spinning={mainData.loading}>
+            <Layout className="main-container">
+                <Sider className="left-sider" trigger={null} collapsible collapsed={collapsed}>
+                    <h1 className="logo" style={{ height: '64px', boxSizing: 'border-box' }}>AA-BB</h1>
+                    <Menu mode="inline"
+                        defaultSelectedKeys={[type]}
+                        defaultOpenKeys={[type]}
+                        style={{ height: '100%', borderRight: 0 }}
+                        onClick={(event: any) => menuItemClick(event)}>
+                        {
+                            mainData.data.map((menu: any, index: number) =>
+                                <Menu.Item key={`/${menu.name}`} icon={IconType[menu.name]}>{menu.label}</Menu.Item>)
+                        }
+                    </Menu>
+                </Sider>
+                <Layout className="site-layout">
+                    <Header className="site-layout-background" style={{ padding: 0 }}>
+                        {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+                            className: 'trigger',
+                            onClick: () => setCollapsed(!collapsed),
+                        })}
+                    </Header>
+                    <Content className="site-content">
+                        <section className="list-main">
+                            <Switch>
+                                <PrivateRoute exact path='/' component={List} />
+                                <Route exact path='/:type' component={List} />
+                                <Route exact path='/:type/edit' component={Edit} />
+                                <Route exact path='/:type/auth/:id' component={Auth} />
+                                <Route exact path='/:type/edit/:id' component={Edit} />
+                            </Switch>
+                        </section>
+                    </Content>
+                </Layout>
             </Layout>
-        </Layout>
+        </Spin>
     )
 }

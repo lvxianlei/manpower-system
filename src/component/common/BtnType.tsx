@@ -25,7 +25,7 @@ const buttonType: any = {
     },
     auth: {
         render(props: any, history: any) {
-            return <Button type="link" onClick={() => history.push(history.location.pathname + '/auth')}>{props.name}</Button>
+            return <Button type="link" onClick={() => history.push(history.location.pathname + '/auth/' + props.id)}>{props.name}</Button>
         }
     },
     delete: {
