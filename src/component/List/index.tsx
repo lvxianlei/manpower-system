@@ -1,12 +1,13 @@
 import React, { useEffect, useReducer } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Space, Upload, Spin } from 'antd'
+import { Button, Space, Upload, Spin, Modal } from 'antd'
 import { createFromIconfontCN } from '@ant-design/icons'
-import { request, getSessionItem } from '../../Util'
+import { request, getSessionItem, removeItem } from '../../Util'
 import { LIST_URL, UPLOAD_URL } from '../../Config/API'
 import Query from '../common/Query'
 import Table from '../common/Table'
 import './index.scss'
+const { success, error } = Modal
 const IconFont: any = createFromIconfontCN({
     scriptUrl: '//at.alicdn.com/t/font_2014371_vucntjl36is.js'
 })
@@ -43,6 +44,32 @@ export default (props: any) => {
         })()
     }, [dispatch, type])
 
+    const uploadChange = (event: any) => {
+        if (event.file.status === 'done') {
+            const resData = event.file.response
+            if (resData.code === 1) {
+                success({
+                    title: '保存',
+                    content: '数据成功保存...',
+                    okText: '确认'
+                })
+            } else if (resData.code === -1) {
+                error({
+                    title: '当前会话超时，请重新登陆',
+                    content: '打开网站时间过长，或长时间未操作',
+                    okText: '登录',
+                    onOk: () => props.history.replace('/login')
+                })
+            } else {
+                error({
+                    title: '保存失败...',
+                    content: <div style={{ width: '100%', height: '60px', overflowY: 'auto' }}>{JSON.stringify(resData.msg)}</div > || '',
+                    okText: '确认'
+                })
+            }
+        }
+    }
+
     return (
         <Spin spinning={listData.loading}>
             <Space>
@@ -51,7 +78,10 @@ export default (props: any) => {
                     accept=".xls,.xlsx"
                     action={UPLOAD_URL}
                     method="POST"
+                    showUploadList={false}
                     headers={{ 'Authorization': "Bearer " + getSessionItem('access_token') }}
+                    data={{ type }}
+                    onChange={uploadChange}
                 >
                     <Button><IconFont type="icon-Exceldaoru" />Excel 导入</Button>
                 </Upload>}

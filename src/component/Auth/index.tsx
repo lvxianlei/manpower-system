@@ -4,7 +4,7 @@ import { Form, Switch, Modal, Row, Col, Button } from 'antd'
 import { AUTH_URL } from '../../Config/API'
 import { request } from '../../Util'
 import './index.scss'
-const { confirm, success } = Modal
+const { success } = Modal
 
 const layout = {
     labelCol: {
@@ -66,9 +66,11 @@ export default (props: any) => {
                     title: '保存',
                     content: '数据成功保存...',
                     okText: '确认',
+                    onOk() {
+                        setIsLeave(false)
+                        props.history.go(-1)
+                    }
                 })
-                setIsLeave(false)
-                props.history.go(-1)
             }
         } catch (error) {
             setIsLeave(true)

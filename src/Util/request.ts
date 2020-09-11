@@ -43,7 +43,7 @@ reqest.interceptors.response.use((response) => {
         case 3:
             error({
                 title: '请求错误',
-                content: JSON.stringify(data.msg),
+                content: JSON.stringify(data.msg) || '',
                 okText: '确定'
             })
             break;
