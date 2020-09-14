@@ -21,11 +21,15 @@ const initState = {
 const reducer = (state: any, action: any) => {
     switch (action.type) {
         case "FETCH_LIST_START":
-            return { ...state, loading: false }
+            return { ...state, loading: true }
         case "FETCH_LIST_SUCCESS":
-            return { ...state, ...action.paload }
+            return { ...state, ...action.paload, loading: false }
         case "FETCH_LIST_ERROR":
-            return { ...state, error: action.paload }
+            return { ...state, error: action.paload, loading: false }
+        case "FETCH_LIST_DELETE":
+            return { ...state, data: state.data.filter((dataItem: any) => dataItem.id !== action.paload.id), loading: false }
+        case "FETCH_LIST_UPDATE":
+            return { ...state, data: state.data.concat(action.paload), loading: false }
     }
 }
 
@@ -51,7 +55,10 @@ export default (props: any) => {
                 success({
                     title: '保存',
                     content: '数据成功保存...',
-                    okText: '确认'
+                    okText: '确认',
+                    onOk() {
+                        dispatch({ type: 'FETCH_LIST_UPDATE', paload: resData.data })
+                    }
                 })
             } else if (resData.code === -1) {
                 error({
@@ -68,6 +75,10 @@ export default (props: any) => {
                 })
             }
         }
+    }
+
+    const onDelete = (deleteId: number) => {
+        dispatch({ type: 'FETCH_LIST_DELETE', paload: { id: deleteId } })
     }
 
     return (
@@ -87,7 +98,7 @@ export default (props: any) => {
                 </Upload>}
             </Space>
             <Query />
-            <Table columns={listData.head} dataSource={listData.data} />
+            <Table columns={listData.head} dataSource={listData.data} onDelete={onDelete} />
         </Spin>
     )
 }

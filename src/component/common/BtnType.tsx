@@ -13,8 +13,9 @@ interface Button_selef {
 }
 
 interface BtnType {
-    data: Button_selef,
-    type: string
+    data: Button_selef;
+    type: string;
+    onDelete?: Function;
 }
 
 const buttonType: any = {
@@ -29,7 +30,7 @@ const buttonType: any = {
         }
     },
     delete: {
-        handleClick(data: Button_selef, history: any) {
+        handleClick(data: Button_selef, history: any, onDelete: Function) {
             const type = history.location.pathname.split('/')[1]
             confirm({
                 title: data.name,
@@ -43,7 +44,10 @@ const buttonType: any = {
                             success({
                                 title: '删除',
                                 content: '数据成功删除...',
-                                okText: '确认'
+                                okText: '确认',
+                                onOk() {
+                                    onDelete(deleteInfo.data.id)
+                                }
                             })
                         }
                     } catch (error) {
@@ -52,8 +56,8 @@ const buttonType: any = {
                 }
             })
         },
-        render(props: Button_selef, history: any) {
-            return <Button type="link" onClick={() => this.handleClick(props, history)}>{props.name}</Button>
+        render(props: Button_selef, history: any, onDelete: Function) {
+            return <Button type="link" onClick={() => this.handleClick(props, history, onDelete)}>{props.name}</Button>
         }
     }
 }
@@ -61,6 +65,6 @@ const buttonType: any = {
 export default (props: BtnType) => {
     const history = useHistory()
     return <>
-        {buttonType[props.type].render(props.data, history)}
+        {buttonType[props.type].render(props.data, history, props.onDelete)}
     </>
 }

@@ -2,8 +2,9 @@ import React from 'react'
 import { Table, Space } from 'antd'
 import BtnType from './BtnType'
 interface Table_prop {
-    columns: Array<any>
-    dataSource: Array<any>
+    columns: Array<any>;
+    dataSource: Array<any>;
+    onDelete?: Function
 }
 export default (props: Table_prop) => {
     const action: any = {
@@ -14,7 +15,12 @@ export default (props: Table_prop) => {
                 {
                     text.pageButton
                     &&
-                    text.pageButton.map((button: any, index: number) => (<BtnType key={button.name} data={{ ...button, id: text.id }} type={button.type} />)
+                    text.pageButton.map((button: any, index: number) => (<BtnType
+                        key={button.name}
+                        data={{ ...button, id: text.id }}
+                        type={button.type}
+                        onDelete={props.onDelete}
+                    />)
                     )}
             </Space>
         )
@@ -26,6 +32,6 @@ export default (props: Table_prop) => {
         dataIndex: item.name
     }))
     columns.unshift(action)
-    const data = props.dataSource.map((item: any) => ({ ...item, key: item.idNumber + item.username }))
+    const data = props.dataSource.map((item: any) => ({ ...item, key: item.id_number + item.id }))
     return <Table columns={columns} dataSource={data} />
 }
