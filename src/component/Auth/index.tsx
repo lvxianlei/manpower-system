@@ -20,6 +20,7 @@ const layout = {
 const initState = {
     auth_menu: [],
     auth_btn: [],
+    auth_department: [],
     data: {
         auth_btn: [],
         auth_menu: [],
@@ -81,13 +82,21 @@ export default (props: any) => {
             <Prompt when={isLeave} message={() => 'edit'} />
             <Form name="manpower-auth" {...layout} form={form} labelAlign="right" onFinish={event => onFinish(event)}>
                 <Row>
-                    <Col span={9} offset={2}>
+                    <Col span={6} offset={2}>
+                        <div className='ant-col ant-form-item-label ant-col-xs-12 ant-col-sm-4'>菜单权限</div>
                         {authData.auth_menu.map((menu: any) => <Form.Item valuePropName="checked" key={menu.name} name={menu.name} label={menu.label}>
                             <Switch />
                         </Form.Item>)}
                     </Col>
-                    <Col span={9} offset={2}>
+                    <Col span={6} offset={2}>
+                        <div className='ant-col ant-form-item-label ant-col-xs-12 ant-col-sm-4'>按钮权限</div>
                         {authData.auth_btn.map((menu: any) => <Form.Item valuePropName="checked" key={menu.name} name={menu.name} label={menu.label}>
+                            <Switch />
+                        </Form.Item>)}
+                    </Col>
+                    <Col span={6} offset={2}>
+                        <div className='ant-col ant-form-item-label ant-col-xs-12 ant-col-sm-4'>部门权限</div>
+                        {authData.auth_department.map((menu: any) => <Form.Item valuePropName="checked" key={menu.name} name={menu.name} label={menu.label}>
                             <Switch />
                         </Form.Item>)}
                     </Col>

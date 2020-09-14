@@ -2,7 +2,7 @@ import React, { useEffect, useReducer } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Space, Upload, Spin, Modal } from 'antd'
 import { createFromIconfontCN } from '@ant-design/icons'
-import { request, getSessionItem, removeItem } from '../../Util'
+import { request, getSessionItem } from '../../Util'
 import { LIST_URL, UPLOAD_URL } from '../../Config/API'
 import Query from '../common/Query'
 import Table from '../common/Table'
@@ -29,7 +29,7 @@ const reducer = (state: any, action: any) => {
         case "FETCH_LIST_DELETE":
             return { ...state, data: state.data.filter((dataItem: any) => dataItem.id !== action.paload.id), loading: false }
         case "FETCH_LIST_UPDATE":
-            return { ...state, data: state.data.concat(action.paload), loading: false }
+            return { ...state, data: state.data, loading: false }
     }
 }
 
