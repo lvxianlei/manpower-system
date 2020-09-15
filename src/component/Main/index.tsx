@@ -5,12 +5,13 @@ import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons'
 import List from '../List'
 import Edit from '../Edit'
 import Auth from '../Auth'
+import Error from '../Error'
 import './index.scss'
 import { request } from '../../Util'
 import { MENU_URL } from '../../Config/API'
 import IconType from '../common/IconType'
 const { Header, Content, Sider } = Layout;
-
+const { SubMenu } = Menu
 const initState = {
     data: [],
     loading: false
@@ -46,6 +47,7 @@ export default (props: any) => {
     const type = props.location.pathname
     const [collapsed, setCollapsed] = useState(false)
     const [mainData, dispatch] = useReducer(reducer, initState)
+    const { loading, data: menuData } = mainData
     const menuItemClick = (event: any) => {
         props.history.push(event.key)
     }
@@ -57,13 +59,13 @@ export default (props: any) => {
                 const fetchMainData: any = await request.post(MENU_URL, {})
                 dispatch({ type: 'FETCH_Main_SUCCESS', paload: fetchMainData.data })
             } catch (error) {
-                dispatch({ type: 'FETCH_Main_ERROR', paload: error })
+                dispatch({ type: 'FETCH_Main_ERROR', paload: error.data })
             }
         })()
     }, [dispatch])
 
     return (
-        <Spin spinning={mainData.loading}>
+        <Spin spinning={loading}>
             <Layout className="main-container">
                 <Sider className="left-sider" trigger={null} collapsible collapsed={collapsed}>
                     <h1 className="logo" style={{ height: '64px', boxSizing: 'border-box' }}>AA-BB</h1>
@@ -73,8 +75,9 @@ export default (props: any) => {
                         style={{ height: '100%', borderRight: 0 }}
                         onClick={(event: any) => menuItemClick(event)}>
                         {
-                            mainData.data.map((menu: any, index: number) =>
-                                <Menu.Item key={`/${menu.name}`} icon={IconType[menu.name]}>{menu.label}</Menu.Item>)
+                            menuData.map((menu: any) => menu.child ? <SubMenu title={menu.label} key={menu.name} icon={IconType[menu.name]}>
+                                {menu.child.map((child: any) => <Menu.Item key={`/${child.name}`} icon={IconType[child.name]}>{child.label}</Menu.Item>)}
+                            </SubMenu> : <Menu.Item key={`/${menu.name}`} icon={IconType[menu.name]}>{menu.label}</Menu.Item>)
                         }
                     </Menu>
                 </Sider>

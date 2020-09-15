@@ -82,11 +82,9 @@ export default (props: any) => {
                     )}
                 </Row>
                 <Row>
-                    <Col span={4} offset={10} >
-                        <Col span={14} offset={5} >
-                            <Button type="primary" htmlType="submit" className="login-form-button">确认</Button>
-                            <Button style={{ marginLeft: "10px" }} type="primary" htmlType="submit" className="login-form-button">取消</Button>
-                        </Col>
+                    <Col span={6} offset={9} >
+                        <Button type="primary" htmlType="submit" className="login-form-button">确认</Button>
+                        <Button style={{ marginLeft: "10px" }} type="primary" htmlType="submit" className="login-form-button">取消</Button>
                     </Col>
                 </Row>
             </Form>
