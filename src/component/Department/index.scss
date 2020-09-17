@@ -1,0 +1,11 @@
+.department-head {
+    padding: 20px 0;
+}
+.department {
+    .ant-card-actions {
+        border-top: 1px solid #ccc;
+        & > li:not(:last-child) {
+            border-right: 1px solid #ccc;
+        }
+    }
+}

@@ -44,11 +44,9 @@ reqest.interceptors.response.use((response) => {
             error({
                 title: '请求错误',
                 content: JSON.stringify(data.msg) || '',
-                okText: '确定',
-                onOk:()=>{
-                    
-                }
+                okText: '确定'
             })
+            return ({ code: 500 })
             break;
         default:
             return response.data;

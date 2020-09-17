@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>递归</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    const data = [{
+        "disableCheckbox": true,
+        "key": "4",
+        "title": "12",
+        "disabled": false,
+        "isLeaf": false,
+        "children": [{
+            "disableCheckbox": true,
+            "key": "6",
+            "title": "333",
+            "disabled": false,
+            "isLeaf": false,
+            "children": [{
+                "disableCheckbox": true,
+                "key": "92",
+                "title": "cc",
+                "disabled": false,
+                "isLeaf": false,
+                "children": [{
+                    "disableCheckbox": true,
+                    "key": "95",
+                    "title": "ff",
+                    "disabled": false,
+                    "isLeaf": false,
+                    "children": [{
+                        "disableCheckbox": false,
+                        "key": "104",
+                        "title": "ee",
+                        "disabled": false,
+                        "isLeaf": true,
+                        "children": []
+                    }]
+                }]
+            }]
+        }]
+    }, {
+        "disableCheckbox": true,
+        "key": "91",
+        "title": "dd",
+        "disabled": false,
+        "isLeaf": false,
+        "children": [{
+            "disableCheckbox": false,
+            "key": "105",
+            "title": "123",
+            "disabled": false,
+            "isLeaf": true,
+            "children": []
+        }]
+    }, {
+        "disableCheckbox": true,
+        "key": "5",
+        "title": "23",
+        "disabled": false,
+        "isLeaf": false,
+        "children": []
+    }, {
+        "disableCheckbox": true,
+        "key": "93",
+        "title": "qq",
+        "disabled": false,
+        "isLeaf": false,
+        "children": []
+    }, {
+        "disableCheckbox": true,
+        "key": "6",
+        "title": "333",
+        "disabled": false,
+        "isLeaf": false,
+        "children": [{
+            "disableCheckbox": true,
+            "key": "92",
+            "title": "cc",
+            "disabled": false,
+            "isLeaf": false,
+            "children": [{
+                "disableCheckbox": true,
+                "key": "95",
+                "title": "ff",
+                "disabled": false,
+                "isLeaf": false,
+                "children": [{
+                    "disableCheckbox": false,
+                    "key": "104",
+                    "title": "ee",
+                    "disabled": false,
+                    "isLeaf": true,
+                    "children": []
+                }]
+            }]
+        }]
+    }, {
+        "disableCheckbox": true,
+        "key": "92",
+        "title": "cc",
+        "disabled": false,
+        "isLeaf": false,
+        "children": [{
+            "disableCheckbox": true,
+            "key": "95",
+            "title": "ff",
+            "disabled": false,
+            "isLeaf": false,
+            "children": [{
+                "disableCheckbox": false,
+                "key": "104",
+                "title": "ee",
+                "disabled": false,
+                "isLeaf": true,
+                "children": []
+            }]
+        }]
+    }, {
+        "disableCheckbox": true,
+        "key": "95",
+        "title": "ff",
+        "disabled": false,
+        "isLeaf": false,
+        "children": [{
+            "disableCheckbox": false,
+            "key": "104",
+            "title": "ee",
+            "disabled": false,
+            "isLeaf": true,
+            "children": []
+        }]
+    }, {
+        "disableCheckbox": false,
+        "key": "104",
+        "title": "ee",
+        "disabled": false,
+        "isLeaf": true,
+        "children": []
+    }, {
+        "disableCheckbox": false,
+        "key": "105",
+        "title": "123",
+        "disabled": false,
+        "isLeaf": true,
+        "children": []
+    }]
+
+
+    const addParent = (keyChildren, key) => keyChildren.map(keyItem => {
+        if (keyItem.children && keyItem.children.length > 0) {
+            return ({
+                ...keyItem,
+                parent: key || '',
+                children: addParent(keyItem.children, keyItem.key)
+            })
+        } else {
+            return ({
+                ...keyItem,
+                parent: key || ''
+            })
+        }
+    })
+    /*
+    */
+    const seachData = (data, seachKeys) => {
+        let isInclude = false
+        const seach = (keyChildren, seachKeys) => {
+            keyChildren.forEach(keyItem => {
+                if (seachKeys.includes(keyItem.key)) {
+                    isInclude = true
+                } else {
+                    if (keyItem.children && keyItem.children.length > 0) {
+                        seach(keyItem.children, seachKeys)
+                    }
+                }
+            })
+        }
+        seach(data.children, seachKey)
+        return isInclude
+    }
+
+    const seachForKey = (data, seachKeys) => {
+        return (data, seachKeys) => {
+            if (seachKeys instanceof Array) {
+                const warpKeys = data.filter(item => seachKeys.filter(key => key === item.key).length > 0)
+                return warpKeys.concat(data.filter(dataItem => seachData(dataItem, seachKeys)))
+            } else {
+                console.error("seachKeys must be a Array!!!")
+            }
+        }
+    }
+
+    console.log(seachForKey(data, ['104']))
+
+</script>
+
+</html>

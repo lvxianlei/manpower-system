@@ -8,6 +8,7 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import { getSessionItem, request } from './Util'
 import Login from './component/Login'
 import Main from './component/Main'
+import NoMatch from './component/NoMatch';
 const { confirm } = Modal
 const promptMessage: any = {
   edit: '数据未保存，您确定仍要要离开吗？'
@@ -47,6 +48,7 @@ ReactDOM.render(
       <Switch>
         <Route exact path="/login" component={Login} />
         <PrivateRoute path="/" component={Main} />
+        <Route component={NoMatch} />
       </Switch>
     </BrowserRouter>
   </ConfigProvider>,

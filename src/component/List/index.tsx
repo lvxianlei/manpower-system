@@ -15,6 +15,7 @@ const IconFont: any = createFromIconfontCN({
 const initState = {
     head: [],
     data: [],
+    error: '',
     loading: true
 }
 
@@ -41,9 +42,13 @@ export default (props: any) => {
             dispatch({ type: 'FETCH_LIST_START' })
             try {
                 const listData: any = await request.post(LIST_URL, { type })
-                dispatch({ type: 'FETCH_LIST_SUCCESS', paload: listData.data })
+                if (listData.code === 1) {
+                    dispatch({ type: 'FETCH_LIST_SUCCESS', paload: listData.data })
+                } else {
+                    props.history.push('/nomatch/500')
+                }
             } catch (error) {
-                dispatch({ type: 'FETCH_LIST_ERROR', paload: error })
+                dispatch({ type: 'FETCH_LIST_ERROR', paload: error.code })
             }
         })()
     }, [dispatch, type])

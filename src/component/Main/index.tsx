@@ -5,7 +5,8 @@ import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons'
 import List from '../List'
 import Edit from '../Edit'
 import Auth from '../Auth'
-import Error from '../Error'
+import NoMatch from '../NoMatch'
+import Department from '../Department'
 import './index.scss'
 import { request } from '../../Util'
 import { MENU_URL } from '../../Config/API'
@@ -28,29 +29,52 @@ const reducer = (state: any, action: any) => {
     }
 }
 
-const PrivateRoute = ({ component: Component, path }: any) => {
-    return (
-        <Route
-            render={props => {
-                if (path === '/') {
-                    return <Redirect to={{ pathname: "/user_info" }} />
-                } else {
-                    return <Component {...props} />
-                }
+const PrivateRoute = ({ component: Component, path }: any) => (
+    <Route
+        render={props => {
+            if (path === '/') {
+                return <Redirect to={{ pathname: "/user_info" }} />
+            } else {
+                return <Component {...props} />
             }
-            }
-        />
-    )
-}
+        }
+        }
+    />
+)
+
+
+// const ExactRoute = ({ component: Component, exactData, computedMatch, path }: any) => <Route
+//     render={props => {
+//         console.log(exactData, computedMatch.params.type)
+//         return exactData.includes(computedMatch.params.type) ?
+//             <Component {...props} path={path} match={computedMatch} />
+//             :
+//             <Redirect to={{ pathname: "/nomatch/404" }} />
+//     }}
+// />
+
+
+
+// const flatMenu = (menuData: Array<any>) => {
+//     const flatArray: Array<string> = []
+//     const flat = (menuArray: Array<any>) => {
+//         menuArray.forEach((menu: any) => {
+//             if (!menu.child) {
+//                 flatArray.push(menu.name)
+//             } else {
+//                 flat(menu.child)
+//             }
+//         })
+//     }
+//     flat(menuData);
+//     return flatArray
+// }
 
 export default (props: any) => {
     const type = props.location.pathname
     const [collapsed, setCollapsed] = useState(false)
     const [mainData, dispatch] = useReducer(reducer, initState)
     const { loading, data: menuData } = mainData
-    const menuItemClick = (event: any) => {
-        props.history.push(event.key)
-    }
 
     useEffect(() => {
         (async () => {
@@ -73,7 +97,7 @@ export default (props: any) => {
                         defaultSelectedKeys={[type]}
                         defaultOpenKeys={[type]}
                         style={{ height: '100%', borderRight: 0 }}
-                        onClick={(event: any) => menuItemClick(event)}>
+                        onClick={(event: any) => props.history.push(event.key)}>
                         {
                             menuData.map((menu: any) => menu.child ? <SubMenu title={menu.label} key={menu.name} icon={IconType[menu.name]}>
                                 {menu.child.map((child: any) => <Menu.Item key={`/${child.name}`} icon={IconType[child.name]}>{child.label}</Menu.Item>)}
@@ -92,10 +116,13 @@ export default (props: any) => {
                         <section className="list-main">
                             <Switch>
                                 <PrivateRoute exact path='/' component={List} />
+                                <Route exact path='/department_setting' component={Department} />
                                 <Route exact path='/:type' component={List} />
                                 <Route exact path='/:type/edit' component={Edit} />
                                 <Route exact path='/:type/auth/:id' component={Auth} />
                                 <Route exact path='/:type/edit/:id' component={Edit} />
+                                <Route exact path='/nomatch/:status' component={NoMatch} />
+                                <Route component={NoMatch} />
                             </Switch>
                         </section>
                     </Content>
