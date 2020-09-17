@@ -154,28 +154,30 @@
     }]
 
 
-    const addParent = (keyChildren, key) => keyChildren.map(keyItem => {
-        if (keyItem.children && keyItem.children.length > 0) {
-            return ({
-                ...keyItem,
-                parent: key || '',
-                children: addParent(keyItem.children, keyItem.key)
-            })
-        } else {
-            return ({
-                ...keyItem,
-                parent: key || ''
-            })
-        }
-    })
+    // const addParent = (keyChildren, key) => keyChildren.map(keyItem => {
+    //         if (keyItem.children && keyItem.children.length > 0) {
+    //             return ({
+    //                 ...keyItem,
+    //                 parent: key || '',
+    //                 children: addParent(keyItem.children, keyItem.key)
+    //             })
+    //         } else {
+    //             return ({
+    //                 ...keyItem,
+    //                 parent: key || ''
+    //             })
+    //         }
+    //     })
     /*
-    */
+     */
     const seachData = (data, seachKeys) => {
         let isInclude = false
+        let key = ''
         const seach = (keyChildren, seachKeys) => {
             keyChildren.forEach(keyItem => {
                 if (seachKeys.includes(keyItem.key)) {
                     isInclude = true
+                    key = keyItem.key
                 } else {
                     if (keyItem.children && keyItem.children.length > 0) {
                         seach(keyItem.children, seachKeys)
@@ -183,23 +185,46 @@
                 }
             })
         }
-        seach(data.children, seachKey)
-        return isInclude
+        seach(data.children, seachKeys)
+        return ({
+            isInclude,
+            key
+        })
     }
 
     const seachForKey = (data, seachKeys) => {
-        return (data, seachKeys) => {
-            if (seachKeys instanceof Array) {
-                const warpKeys = data.filter(item => seachKeys.filter(key => key === item.key).length > 0)
-                return warpKeys.concat(data.filter(dataItem => seachData(dataItem, seachKeys)))
-            } else {
-                console.error("seachKeys must be a Array!!!")
-            }
+        if (seachKeys instanceof Array) {
+            const warpKeys = data.filter(item => seachKeys.filter(key => key === item.key).length > 0)
+            const mainKeys = data.map(dataItem => {
+                const useKeys = seachData(dataItem, seachKeys)
+                return useKeys.isInclude ? ({...dataItem,
+                    seachKey: useKeys.key
+                }) : ({...dataItem
+                })
+            }).filter(item => seachData(item, seachKeys).isInclude)
+
+            return warpKeys.concat(mainKeys)
+        } else {
+            console.error("seachKeys must be a Array!!!")
         }
     }
 
-    console.log(seachForKey(data, ['104']))
-
+    const seachDataLength = (data) => {
+        let isInclude = 0
+        const seach = (keyChildren) => {
+            keyChildren.forEach(keyItem => {
+                isInclude++
+                if (keyItem.children && keyItem.children.length > 0) {
+                    seach(keyItem.children)
+                }
+            })
+        }
+        seach(data)
+        return isInclude
+    }
+    const result = seachForKey(data, ['104', '105'])
+    const seachKeyLength = result.map(item => seachDataLength(item.children))
+    console.log(result, seachKeyLength)
 </script>
 
 </html>
