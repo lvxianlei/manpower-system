@@ -30,7 +30,7 @@ const reducer = (state: any, action: any) => {
         case "FETCH_LIST_DELETE":
             return { ...state, data: state.data.filter((dataItem: any) => dataItem.id !== action.paload.id), loading: false }
         case "FETCH_LIST_UPDATE":
-            return { ...state, data: state.data, loading: false }
+            return { ...state, data: state.data.concat(action.paload), loading: false }
     }
 }
 
