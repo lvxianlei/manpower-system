@@ -170,6 +170,7 @@
     //     })
     /*
      */
+
     const seachData = (data, seachKeys) => {
         let isInclude = false
         let key = ''
@@ -192,23 +193,6 @@
         })
     }
 
-    const seachForKey = (data, seachKeys) => {
-        if (seachKeys instanceof Array) {
-            const warpKeys = data.filter(item => seachKeys.filter(key => key === item.key).length > 0)
-            const mainKeys = data.map(dataItem => {
-                const useKeys = seachData(dataItem, seachKeys)
-                return useKeys.isInclude ? ({...dataItem,
-                    seachKey: useKeys.key
-                }) : ({...dataItem
-                })
-            }).filter(item => seachData(item, seachKeys).isInclude)
-
-            return warpKeys.concat(mainKeys)
-        } else {
-            console.error("seachKeys must be a Array!!!")
-        }
-    }
-
     const seachDataLength = (data) => {
         let isInclude = 0
         const seach = (keyChildren) => {
@@ -222,9 +206,42 @@
         seach(data)
         return isInclude
     }
+
+    const seachForKey = (data, seachKeys) => {
+        if (seachKeys instanceof Array) {
+            const warpKeys = data.filter(item => seachKeys.filter(key => key === item.key).length > 0)
+            const mainKeys = data.map(dataItem => {
+                const useKeys = seachData(dataItem, seachKeys)
+                return useKeys.isInclude ? ({
+                    ...dataItem,
+                    seachKey: useKeys.key
+                }) : ({
+                    ...dataItem
+                })
+            }).filter(item => seachData(item, seachKeys).isInclude)
+            return warpKeys.concat(mainKeys)
+        } else {
+            console.error("seachKeys must be a Array!!!")
+        }
+    }
+
+    const seachMaxLength = (data, seachKeys) => {
+        if (seachKeys instanceof Array) {
+            const resultData = data.map(item => ({ ...item, length: seachDataLength(item.children) }))
+            const keyGroup = seachKeys.map(key => resultData.filter(dataItem => dataItem.seachKey ? dataItem.seachKey === key : dataItem.key === key))
+            return keyGroup.map(group => group.sort((a, b) => b.length - a.length)[0])
+        } else {
+            throw "seachKeys must be a Array!!!"
+        }
+    }
+
     const result = seachForKey(data, ['104', '105'])
-    const seachKeyLength = result.map(item => seachDataLength(item.children))
-    console.log(result, seachKeyLength)
+    const seachKeyLength = seachMaxLength(result, ['104', '105'])
+    console.log(seachKeyLength)
+
+
+
+
 </script>
 
 </html>
