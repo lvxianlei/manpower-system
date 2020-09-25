@@ -94,12 +94,6 @@ export default (props: any) => {
                             <Switch />
                         </Form.Item>)}
                     </Col>
-                    <Col span={6} offset={2}>
-                        <div className='ant-col ant-form-item-label ant-col-xs-12 ant-col-sm-4'>部门权限</div>
-                        {authData.auth_department.map((menu: any) => <Form.Item valuePropName="checked" key={menu.name} name={menu.name} label={menu.label}>
-                            <Switch />
-                        </Form.Item>)}
-                    </Col>
                 </Row>
                 <Row>
                     <Col span={6} offset={9} >

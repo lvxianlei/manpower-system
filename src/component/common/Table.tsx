@@ -12,18 +12,25 @@ export default (props: Table_prop) => {
         title: '操作',
         key: 'pageButton',
         render: (text: any, record: any) => (
-            <Space size="middle">
-                {
-                    text.pageButton
-                    &&
-                    text.pageButton.map((button: any, index: number) => (<BtnType
-                        key={button.name}
-                        data={{ ...button, id: text.id }}
-                        type={button.type}
-                        onDelete={props.onDelete}
-                    />)
-                    )}
-            </Space>
+            <div style={{
+                wordWrap: 'break-word',
+                wordBreak: 'break-word',
+                whiteSpace: 'nowrap',
+                minWidth: '50px'
+            }}>
+                <Space size="small">
+                    {
+                        text.pageButton
+                        &&
+                        text.pageButton.map((button: any, index: number) => (<BtnType
+                            key={button.name}
+                            data={{ ...button, id: text.id }}
+                            type={button.type}
+                            onDelete={props.onDelete}
+                        />)
+                        )}
+                </Space>
+            </div>
         )
     }
 
