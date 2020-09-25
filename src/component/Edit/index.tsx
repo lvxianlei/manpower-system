@@ -1,8 +1,10 @@
 import React, { useEffect, useReducer, useState } from 'react'
 import { Prompt } from 'react-router-dom'
-import { Form, Input, Button, Spin, Row, Col, Modal } from 'antd'
+import { Form, Button, Spin, Row, Col, Modal } from 'antd'
+import moment from 'moment'
 import { EDIT_URL } from '../../Config/API'
 import { request } from '../../Util'
+import FormType from '../common/FormType'
 import './index.scss'
 const { success } = Modal
 const initState = {
@@ -38,12 +40,22 @@ export default (props: any) => {
     const [editData, dispatch] = useReducer(reducer, initState)
     const [isLeave, setIsLeave] = useState(true)
     const [form] = Form.useForm()
+
+    const formatTime = (editData: any) => {
+        editData.head.forEach((headItem: any) => {
+            if (headItem.type === 'time') {
+                editData.data[headItem.name] = moment(editData.data[headItem.name], headItem.format)
+            }
+        })
+        return editData
+    }
+
     useEffect(() => {
         (async () => {
             dispatch({ type: 'FETCH_EDIT_START' })
             try {
                 const editData: any = await request.post(EDIT_URL, { type, id })
-                dispatch({ type: 'FETCH_EDIT_SUCCESS', paload: editData.data })
+                dispatch({ type: 'FETCH_EDIT_SUCCESS', paload: formatTime(editData.data) })
                 form.setFieldsValue(editData.data.data)
             } catch (error) {
                 dispatch({ type: 'FETCH_EDIT_ERROR', paload: error })
@@ -76,7 +88,7 @@ export default (props: any) => {
                     {editData.head.map((item: any) =>
                         <Col span={9} offset={2} key={item.name}>
                             <Form.Item name={item.name} label={item.label} rules={[{ required: true }]}>
-                                <Input />
+                                <FormType type={item.type} data={item} />
                             </Form.Item>
                         </Col>
                     )}

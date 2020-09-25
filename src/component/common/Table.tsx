@@ -1,6 +1,7 @@
 import React from 'react'
 import { Table, Space } from 'antd'
 import BtnType from './BtnType'
+import './Table.scss'
 interface Table_prop {
     columns: Array<any>;
     dataSource: Array<any>;
@@ -29,9 +30,16 @@ export default (props: Table_prop) => {
     const columns = props.columns.map((item: any) => ({
         key: item.name,
         title: item.label,
-        dataIndex: item.name
+        dataIndex: item.name,
+        className: 'table-th',
+        render: (text: any, record: any) => <div style={{
+            wordWrap: 'break-word',
+            wordBreak: 'break-word',
+            whiteSpace: 'nowrap',
+            minWidth: '50px'
+        }}>{text}</div>
     }))
     columns.unshift(action)
-    const data = props.dataSource.map((item: any) => ({ ...item, key: item.id_number + item.id }))
-    return <Table columns={columns} dataSource={data} />
+    const data = props.dataSource.map((item: any) => ({ ...item, key: (item.id_number + item.id) || item.user_id }))
+    return <Table columns={columns} dataSource={data} style={{ whiteSpace: 'nowrap' }} scroll={{ x: true, y: 1200 }} />
 }

@@ -12,16 +12,7 @@ const initState = {
     error: '',
     loading: true
 }
-const layout = {
-    labelCol: {
-        xs: { span: 12 },
-        sm: { span: 4 },
-    },
-    wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 24 },
-    },
-}
+
 const reducer = (state: any, action: any) => {
     switch (action.type) {
         case "FETCH_DEPARTMENT_START":
@@ -59,13 +50,13 @@ export default (props: any) => {
                 dispatch({ type: 'FETCH_DEPARTMENT_ERROR', paload: error.code })
             }
         })()
-    }, [dispatch])
+    }, [dispatch, props.history])
 
     const onFinish = async () => {
         try {
             const values = await form.validateFields()
             console.log('---values-', values)
-            
+
         } catch (error) {
             console.log('Validate Failed:', error);
         }

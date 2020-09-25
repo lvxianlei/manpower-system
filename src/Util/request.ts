@@ -47,7 +47,6 @@ reqest.interceptors.response.use((response) => {
                 okText: '确定'
             })
             return ({ code: 500 })
-            break;
         default:
             return response.data;
     }

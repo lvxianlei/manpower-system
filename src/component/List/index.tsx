@@ -51,7 +51,7 @@ export default (props: any) => {
                 dispatch({ type: 'FETCH_LIST_ERROR', paload: error.code })
             }
         })()
-    }, [dispatch, type])
+    }, [dispatch, type, props.history])
 
     const uploadChange = (event: any) => {
         if (event.file.status === 'done') {

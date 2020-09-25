@@ -3,12 +3,15 @@ import 'antd/dist/antd.css';
 import { ConfigProvider, Modal } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import zhCN from 'antd/es/locale/zh_CN';
+import 'moment/locale/zh-cn';
 import ReactDOM from 'react-dom'
+import moment from 'moment'
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import { getSessionItem, request } from './Util'
 import Login from './component/Login'
 import Main from './component/Main'
 import NoMatch from './component/NoMatch';
+moment.locale('en')
 const { confirm } = Modal
 const promptMessage: any = {
   edit: '数据未保存，您确定仍要要离开吗？'
