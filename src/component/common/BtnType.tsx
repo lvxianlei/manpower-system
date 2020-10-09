@@ -59,6 +59,11 @@ const buttonType: any = {
         render(props: Button_selef, history: any, onDelete: Function) {
             return <Button type="link" onClick={() => this.handleClick(props, history, onDelete)}>{props.name}</Button>
         }
+    },
+    approve: {
+        render(props: Button_selef, history: any, onDelete: Function) {
+            return <Button type="link" >{props.name}</Button>
+        }
     }
 }
 
