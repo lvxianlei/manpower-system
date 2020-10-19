@@ -86,6 +86,10 @@ export default (props: any) => {
         dispatch({ type: 'FETCH_LIST_DELETE', paload: { id: deleteId } })
     }
 
+    const handleSeach = (values: any) => {
+        console.log('Received values of form: ', values);
+    }
+
     return (
         <Spin spinning={listData.loading}>
             <Space>
@@ -102,8 +106,8 @@ export default (props: any) => {
                     <Button><IconFont type="icon-Exceldaoru" />Excel 导入</Button>
                 </Upload>}
             </Space>
-            <Query />
-            <Table columns={listData.head} dataSource={listData.data} onDelete={onDelete} />
+            <Query onSeach={handleSeach} key={props.location.pathname} />
+            <Table columns={listData.head} dataSource={listData.data} onDelete={onDelete} key={props.location.pathname + 'form'} />
         </Spin>
     )
 }

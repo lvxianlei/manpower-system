@@ -2,11 +2,11 @@ import React, { useState, useReducer, useEffect } from 'react'
 import { Prompt } from 'react-router-dom'
 import { Modal, Spin, Card, Row, Col, Space, Button, Form, Input } from 'antd'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
-import { LIST_URL } from '../../Config/API'
+import { LIST_URL, DEPARTMENT_URL } from '../../Config/API'
 import { request } from '../../Util'
 import './index.scss'
 const { Meta } = Card
-
+const { success, confirm } = Modal
 const initState = {
     data: [],
     error: '',
@@ -22,9 +22,15 @@ const reducer = (state: any, action: any) => {
         case "FETCH_DEPARTMENT_ERROR":
             return { ...state, error: action.paload, loading: false }
         case "FETCH_DEPARTMENT_DELETE":
-            return { ...state, data: state.data.filter((dataItem: any) => dataItem.id !== action.paload.id), loading: false }
+            return {
+                ...state, data: state.data.filter((dataItem: any) => dataItem.name !== action.paload.name
+                    && dataItem.label !== action.paload.label),
+                loading: false
+            }
         case "FETCH_DEPARTMENT_ADD":
-            return { ...state, data: state.data, loading: false }
+            return { ...state, data: state.data.concat(action.paload), loading: false }
+        case "FETCH_DEPARTMENT_EDIT":
+            return { ...state, data: state.data.concat(action.paload), loading: false }
     }
 }
 const initFormData = {
@@ -55,11 +61,55 @@ export default (props: any) => {
     const onFinish = async () => {
         try {
             const values = await form.validateFields()
-            console.log('---values-', values)
-
+            if (editModel.title === '新增') {
+                const addDepartment = await request.post(DEPARTMENT_URL, values)
+                success({
+                    title: '保存',
+                    content: addDepartment.data,
+                    okText: '确认',
+                    onOk() {
+                        setEditModel({
+                            ...editModel,
+                            visible: false
+                        })
+                        dispatch({ type: 'FETCH_DEPARTMENT_ADD', paload: values })
+                    }
+                })
+            } else {
+                const editDepartment = await request.post(DEPARTMENT_URL, values)
+                success({
+                    title: '保存',
+                    content: editDepartment.data,
+                    okText: '确认',
+                    onOk() {
+                        setEditModel({
+                            ...editModel,
+                            visible: false
+                        })
+                        dispatch({ type: 'FETCH_DEPARTMENT_EDIT', paload: values })
+                    }
+                })
+            }
         } catch (error) {
             console.log('Validate Failed:', error);
         }
+    }
+
+    const handleDelete = (values: any) => {
+        confirm({
+            title: '删除',
+            content: `确定要删除？`,
+            okText: '确认',
+            cancelText: '取消',
+            onOk: async () => {
+                try {
+                    const deleteDepartment = await request.delete(DEPARTMENT_URL, { data: values })
+                    dispatch({ type: 'FETCH_DEPARTMENT_DELETE', paload: values })
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+        })
     }
 
     return (
@@ -67,7 +117,10 @@ export default (props: any) => {
             <Prompt when={editModel.isLeave} message={() => 'edit'} />
             <div className="department-head">
                 <Space>
-                    <Button type="primary" onClick={() => { setEditModel({ title: '新增', visible: true, isLeave: true, data: initFormData }); form.setFieldsValue(initFormData) }}>新增</Button>
+                    <Button type="primary" onClick={() => {
+                        setEditModel({ title: '新增', visible: true, isLeave: true, data: initFormData });
+                        form.setFieldsValue(initFormData)
+                    }}>新增</Button>
                 </Space>
             </div>
             <Modal
@@ -92,8 +145,11 @@ export default (props: any) => {
                             style={{ border: '1px solid #ccc' }}
                             size="small"
                             actions={[
-                                <DeleteOutlined key="DeleteOutlined" onClick={() => { }} />,
-                                <EditOutlined key="edit" onClick={() => { setEditModel({ title: '编辑', visible: true, isLeave: true, data: item }); form.setFieldsValue(item) }} />
+                                <DeleteOutlined key="DeleteOutlined" onClick={() => handleDelete(item)} />,
+                                // <EditOutlined key="edit" onClick={() => {
+                                //     setEditModel({ title: '编辑', visible: true, isLeave: true, data: item });
+                                //     form.setFieldsValue(item)
+                                // }} />
                             ]}
                         > <Meta
                                 title={item.label}
