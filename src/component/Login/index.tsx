@@ -3,6 +3,7 @@ import { Form, Input, Button, Alert } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import axios from 'axios'
 import { setSessionItem, ErrorInfo } from '../../Util'
+import { LOGIN_URL } from '../../Config/API'
 import './index.scss'
 
 interface SubmitValue {
@@ -21,7 +22,7 @@ export default (props: any) => {
         try {
             setLoaded(true)
             const data = await axios.request({
-                url: 'http://localhost:8000/login',
+                url: LOGIN_URL,
                 method: 'post',
                 headers: { 'content-type': 'application/x-www-form-urlencoded;charset=utf8' },
                 data: postData
